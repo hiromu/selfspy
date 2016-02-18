@@ -165,6 +165,7 @@ class Sniffer:
                 activeApps = self.workspace.runningApplications()
                 for app in activeApps:
                     if app.isActive():
+                        app_pid = app.processIdentifier()
                         app_name = app.localizedName()
                         options = kCGWindowListOptionOnScreenOnly | kCGWindowListExcludeDesktopElements
                         windowList = CGWindowListCopyWindowInfo(options,
@@ -179,9 +180,9 @@ class Sniffer:
                         ]
                         windowList = windowList + windowListLowPrio
                         for window in windowList:
-                            if window['kCGWindowOwnerName'] == app_name:
+                            if window['kCGWindowOwnerPID'] == app_pid:
                                 geometry = window['kCGWindowBounds']
-                                self.screen_hook(window['kCGWindowOwnerName'],
+                                self.screen_hook(app_name,
                                                  window.get('kCGWindowName', u''),
                                                  geometry['X'],
                                                  geometry['Y'],
